@@ -1,0 +1,20 @@
+const docArray = [{id: 1, name: "A", description: "B", price: 1.0, units: 1}, {id: 2, name: "C", description: "D", price: 1.0, units: 1}]
+const queryJSONf = {}
+const queryJSONup = { name: "A" }
+const updateJSON = { id: 5 }
+const queryJSONdel = {id: 2}
+const operations = require('./operations')
+
+module.exports = function(client, col) {
+  operations.insertDocuments(col, docArray,
+    () => {
+      operations.updateDocument(col, queryJSONup, updateJSON,
+        () => {
+          operations.removeDocument(col, queryJSONdel,
+            () => {
+              operations.findDocuments(col, queryJSONf,
+                () => {client.close()})
+            })
+        })
+    })
+}
